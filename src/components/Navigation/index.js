@@ -1,7 +1,47 @@
 import React from 'react';
-const Nav = () => (
+import { Link } from 'react-router-dom';
+
+import SignOutButton from '../SignOut';
+import * as ROUTES from '../../constants/routes';
+
+import { AuthUserContext } from '../Session';
+
+const Navigation = () => (
   <div>
-    <h1>Nav</h1>
+    <AuthUserContext.Consumer>
+      {authUser =>
+        authUser ? <NavigationAuth /> : <NavigationNonAuth />
+      }
+    </AuthUserContext.Consumer>
   </div>
 );
-export default Nav;
+
+const NavigationAuth = () => (
+  <ul>
+    <li>
+      <Link to={ROUTES.LANDING}>Landing</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.HOME}>Home</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.ACCOUNT}>Account</Link>
+    </li>
+    <li>
+      <SignOutButton />
+    </li>
+  </ul>
+);
+
+const NavigationNonAuth = () => (
+  <ul>
+    <li>
+      <Link to={ROUTES.LANDING}>Landing</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+    </li>
+  </ul>
+);
+
+export default Navigation;
