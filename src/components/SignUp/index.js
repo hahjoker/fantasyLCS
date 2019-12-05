@@ -27,30 +27,28 @@ class SignUpFormBase extends Component {
   }
 
   onSubmit = event => {
+    const ovrScore = 0;
+    const wkScore = 0;
     const { username, email, passwordOne } = this.state;
-
+    const players = {};
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        // Create a user in your Firebase realtime database
-        this.props.firebase
-          .user(authUser.user.uid)
-          .set({
+        return this.props.firebase.user(authUser.user.uid).set(
+          {
             username,
             email,
-          })
-          .then(() => {
-            this.setState({ ...INITIAL_STATE });
-            this.props.history.push(ROUTES.HOME);
-          })
-          .catch(error => {
-            this.setState({ error });
-          });
+            players,
+            ovrScore,
+            wkScore
+          },
+          { merge: true },
+        );
       })
-      .catch(error => {
-        this.setState({ error });
+      .then(() => {
+        this.setState({ ...INITIAL_STATE });
+        this.props.history.push(ROUTES.HOME);
       });
-
     event.preventDefault();
   };
 
@@ -80,7 +78,7 @@ class SignUpFormBase extends Component {
           value={username}
           onChange={this.onChange}
           type="text"
-          placeholder="Full Name"
+          placeholder="Team Name"
         />
         <input
           name="email"
