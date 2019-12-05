@@ -10,6 +10,7 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import PullList from '../EditStats';
+import EditPlayer from '../EditPlayer';
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
@@ -26,6 +27,7 @@ const App = () => (
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       
       <Route path={ROUTES.STATS} component={PullList} />
+      <Route path={ROUTES.PLAYERSUP} component={EditPlayer} />
 
       <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage}/>
       <Route path={ROUTES.HOME} component={HomePage} />
