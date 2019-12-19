@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
 const INITIAL_STATE = {
   team: '',
 };
-class PullList extends Component {
+class EditPlayerStats extends Component {
+    
     constructor(props) {
       super(props);
   
@@ -18,17 +20,17 @@ class PullList extends Component {
       };
     }
     onSubmit = event => {
-      console.log(this.state.team);
-      const cookies = new Cookies();
-      cookies.set('teams', this.state.team, { path: '/' });
-      console.log(cookies.get('teams')); 
-      this.props.history.push(ROUTES.PLAYERSUP);
-      event.preventDefault();
+        console.log(this.state);
+        //ADDING STUFF
+        event.preventDefault();
     }
 
     componentDidMount() {
-      console.log(this.props.firebase.db);
-      this.props.firebase.db.collection("weeks").doc("1").collection("teams")
+      const cookies = new Cookies();
+      //console.log(this.props.firebase.db);
+      console.log(cookies.get('player'));
+      const yokisoQuery = this.props.firebase.db.collection("weeks").doc("1").collection("teams").doc(cookies.get('teams')).collection("players");
+        yokisoQuery.where("name","==",cookies.get('player'))
         .get()
         .then(querySnapshot => {
           console.log(querySnapshot);
@@ -46,15 +48,12 @@ class PullList extends Component {
         const { users, team } = this.state;
         return (
           <form onSubmit={this.onSubmit}>
-            <select name = "team" onChange={this.onChange}>
-            <option value={team}></option>
-            {users.map(user => (
-              <option key={user.name} value={user.name}>{user.name}</option>
+          {users.map(user => (
+            <input name = "kills" type ="number" placeholder={user.kills} onChange={this.onChange}></input>
             ))}
-            </select>
             <button type="submit" class="button" >Submit</button>
           </form>
         );
     }
 }
-export default withRouter(withFirebase(PullList));
+export default withRouter(withFirebase(EditPlayerStats));

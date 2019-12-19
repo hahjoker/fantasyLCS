@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
@@ -8,6 +9,7 @@ const INITIAL_STATE = {
   team: '',
 };
 class EditPlayer extends Component {
+    
     constructor(props) {
       super(props);
   
@@ -18,14 +20,18 @@ class EditPlayer extends Component {
       };
     }
     onSubmit = event => {
-      console.log(this.state.team);
-      this.props.history.push(ROUTES.PLAYERSUP);
-      event.preventDefault();
+        const cookies = new Cookies();
+        cookies.set('player', this.state.team, { path: '/' });
+        console.log(cookies.get('player')); 
+        this.props.history.push(ROUTES.SPLASHPLAYER);
+        event.preventDefault();
     }
 
     componentDidMount() {
-      console.log(this.props.firebase.db);
-      this.props.firebase.db.collection("weeks").doc("1").collection("teams")
+      const cookies = new Cookies();
+      //console.log(this.props.firebase.db);
+      const yokisoQuery = this.props.firebase.db.collection("weeks").doc("1").collection("teams").doc(cookies.get('teams')).collection("players");
+        yokisoQuery
         .get()
         .then(querySnapshot => {
           console.log(querySnapshot);
